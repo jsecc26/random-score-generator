@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Score Generator</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <h1>난수표 생성기</h1>
+      <p>설정을 입력하여 랜덤 점수표를 생성하세요</p>
+    </header>
+
+    <main class="main-content">
+      <section class="input-section glass-card">
+        <h2>설정 입력</h2>
+        <form id="scoreForm">
+          <div class="form-group-row">
+            <div class="form-group">
+              <label for="entityCount">개체수 (명/개)</label>
+              <input type="number" id="entityCount" name="entityCount" value="10" min="1" step="1" />
+            </div>
+
+            <div class="form-group">
+              <label for="judgeCount">심사위원 수</label>
+              <input type="number" id="judgeCount" name="judgeCount" value="1" min="1" step="1" />
+            </div>
+          </div>
+
+          <div class="form-group-row">
+            <div class="form-group">
+              <label for="groupCount">점수간 그룹 개수</label>
+              <input type="number" id="groupCount" name="groupCount" value="3" min="1" max="10" step="1" />
+            </div>
+            <div class="form-group" style="justify-content: flex-end;">
+              <button type="button" id="setGroupsBtn" class="secondary-btn">그룹 설정창 생성</button>
+            </div>
+          </div>
+
+          <div id="groupContainer" class="group-container">
+            <div class="empty-state">위 '그룹 설정창 생성' 버튼을 눌러 그룹별 점수 범위를 설정해주세요.</div>
+          </div>
+
+          <div class="form-section-title">심사 기준 설정</div>
+          <div class="form-group-row">
+            <div class="form-group">
+              <label for="criteriaCount">심사기준 개수</label>
+              <input type="number" id="criteriaCount" name="criteriaCount" value="5" min="1" max="20" step="1" />
+            </div>
+            <div class="form-group" style="justify-content: flex-end;">
+              <button type="button" id="setCriteriaBtn" class="secondary-btn">기준 설정창 생성</button>
+            </div>
+          </div>
+
+          <div id="criteriaContainer" class="criteria-container">
+            <!-- Dynamic inputs will be generated here -->
+            <div class="empty-state">위 '기준 설정창 생성' 버튼을 눌러 배점을 설정해주세요.</div>
+          </div>
+
+
+          <button type="submit" class="generate-btn">
+            난수표 생성하기
+          </button>
+        </form>
+      </section>
+
+      <section class="result-section glass-card hidden" id="resultSection">
+        <div class="result-header">
+          <h2>생성 결과</h2>
+          <div class="header-controls" style="display:flex; gap:10px; align-items:center;">
+            <select id="judgeSelector" class="secondary-btn" style="padding:0.5rem;">
+              <!-- Options generated dynamically -->
+            </select>
+            <button id="downloadBtn" class="secondary-btn">Excel 다운로드</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table id="resultTable">
+            <thead>
+              <!-- Dynamic Header -->
+            </thead>
+            <tbody>
+              <!-- Dynamic Body -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>
