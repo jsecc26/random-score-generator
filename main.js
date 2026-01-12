@@ -1,5 +1,8 @@
 import { utils, writeFile } from 'xlsx';
 
+console.log("v1.2: Score Variance Updated");
+
+
 document.querySelector('#scoreForm').addEventListener('submit', (e) => {
     e.preventDefault();
     generateTable();
@@ -315,14 +318,26 @@ function generateTable() {
     globalJudgesData = [];
 
     for (let j = 0; j < judgeCount; j++) {
+        let prevScore = 99999; // Track previous rank's score to enforce descending order
+
         const judgeEntities = baseEntities.map(base => {
-            // Add slight randomness for each judge (e.g. +/- 0.5 ~ 1.5 range)
-            // This ensures not all judges give the EXACT same total score for the same rank
-            const noise = (Math.random() * 2 - 1) * 1.5; // +/- 1.5 variation
-            const judgeTarget = base.targetScore + noise;
+            // Add slight randomness for each judge (e.g. +/- 3.0 range)
+            const noise = (Math.random() * 2 - 1) * 3.0;
+            let judgeTarget = base.targetScore + noise;
 
             // Round target to integer
-            const integerTarget = Math.round(judgeTarget);
+            let integerTarget = Math.round(judgeTarget);
+
+            // Enforce Non-Increasing Order (Current Rank Score <= Prev Rank Score)
+            if (integerTarget > prevScore) {
+                // If noise pushed it higher than previous rank, clamp it down
+                // Allow equal score (tie), or force -1 if strict descending is needed.
+                // Here we assume ties are allowed but rank reversal is not.
+                integerTarget = prevScore;
+            }
+
+            // Keep track for next rank
+            prevScore = integerTarget;
 
             // Solve based on the requested target
             const scores = solveScoresInteger(integerTarget, criteriaSettings);
@@ -330,9 +345,12 @@ function generateTable() {
             // Calculate actual achievable total
             const total = scores.reduce((a, b) => a + b, 0);
 
+            // Update prevScore with ACTUAL achieved total (in case solver missed slightly)
+            prevScore = total;
+
             return {
                 rank: base.rank,
-                targetScore: total, // Actual achieved sum
+                targetScore: total, // Force Target to match Total exactly for display
                 scores: scores,
                 total: total
             };
