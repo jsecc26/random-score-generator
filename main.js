@@ -316,9 +316,13 @@ function generateTable() {
 
     for (let j = 0; j < judgeCount; j++) {
         const judgeEntities = baseEntities.map(base => {
-            // Round target to integer because criteria are integers
-            // This ensures Sum(Criteria) can generate the target
-            const integerTarget = Math.round(base.targetScore);
+            // Add slight randomness for each judge (e.g. +/- 0.5 ~ 1.5 range)
+            // This ensures not all judges give the EXACT same total score for the same rank
+            const noise = (Math.random() * 2 - 1) * 1.5; // +/- 1.5 variation
+            const judgeTarget = base.targetScore + noise;
+
+            // Round target to integer
+            const integerTarget = Math.round(judgeTarget);
 
             // Solve based on the requested target
             const scores = solveScoresInteger(integerTarget, criteriaSettings);
